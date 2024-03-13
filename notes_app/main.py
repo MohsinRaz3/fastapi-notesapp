@@ -19,12 +19,11 @@ app: FastAPI = FastAPI(
 )
 
 origins = [
-    "https://fastapi-sqlmodel.onrender.com",
-    "https://fastapi-sqlmodel.onrender.com/heroes",
-    "https://fastapi-sqlmodel-1.onrender.com",
-    "http://localhost:3000",
-    "https://localhost:3000",
-    "https://localhost:3001",
+    "https://fastapi-notesapp.onrender.com/",
+    "https://fastapi-notesapp.onrender.com/notes/",
+    "https://fastapi-sqlmodel-1.onrender.com/",
+    "http://localhost:3000/",
+    "http://localhost:3001/",
     "https://notes-fastapi.vercel.app",
     "http://localhost",
     "http://localhost:8080",

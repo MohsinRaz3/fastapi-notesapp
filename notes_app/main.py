@@ -20,9 +20,12 @@ app: FastAPI = FastAPI(
 
 origins = [
     "https://fastapi-notesapp.onrender.com/",
+    "https://fastapi-notesapp.onrender.com",
+    "https://fastapi-notesapp.onrender.com/notes",
     "https://fastapi-notesapp.onrender.com/notes/",
     "https://fastapi-sqlmodel-1.onrender.com/",
     "http://localhost:3000/",
+    "http://localhost:3000",
     "http://localhost:3001/",
     "https://notes-fastapi.vercel.app",
     "http://localhost",
@@ -75,7 +78,7 @@ async def get_all_notes(session: Annotated[Session, Depends(get_session)])-> Lis
     
 # FastAPI endpoint for creating heroes
 @app.post("/notes") 
-async def create_note(note: NoteCreate = Body(embed=True), session: Session = Depends(get_session)):
+async def create_note(note: NoteCreate,session: Annotated[Session, Depends(get_session)]):
         db_note = Note.model_validate(note) 
         session.add(db_note)
         session.commit()

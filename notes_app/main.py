@@ -60,7 +60,7 @@ async def home_notes():
     return {"message":"Nextjs FastAPI Notes-App"}
 
 #Get single hero
-@app.get("/notes/", response_model=NoteRead)
+@app.get("/notes/{note_id}", response_model=NoteRead)
 async def get_single_note(note_id: int, session: Annotated[Session, Depends(get_session)]):
     note_data = session.get(Note, note_id)
     # If note_data is None, it means the note with the given ID doesn't exist
@@ -69,7 +69,7 @@ async def get_single_note(note_id: int, session: Annotated[Session, Depends(get_
     return note_data
 
 # FastAPI endpoint for getting heroes
-@app.get("/notes",response_model=List[NoteRead])
+@app.get("/notes/",response_model=List[NoteRead])
 async def get_all_notes(session: Annotated[Session, Depends(get_session)])-> List[NoteRead]:
         notes = session.exec(select(Note)).all()
         if not notes:
@@ -77,7 +77,7 @@ async def get_all_notes(session: Annotated[Session, Depends(get_session)])-> Lis
         return notes
     
 # FastAPI endpoint for creating heroes
-@app.post("/notes") 
+@app.post("/notes/") 
 async def create_note(note: NoteCreate,session: Annotated[Session, Depends(get_session)]):
         db_note = Note.model_validate(note) 
         session.add(db_note)
@@ -86,7 +86,7 @@ async def create_note(note: NoteCreate,session: Annotated[Session, Depends(get_s
         return db_note
 
 #FastAPI endpoint to Update Heros    
-@app.patch("/notes",response_model=NoteRead)
+@app.patch("/notes/{note_id}",response_model=NoteRead)
 async def update_note(note_id : int, note:Note, session: Session = Depends(get_session)):
         
         note_item = session.get(Note, note_id)
@@ -103,7 +103,7 @@ async def update_note(note_id : int, note:Note, session: Session = Depends(get_s
         return note_item
 
 
-@app.delete("/notes/")
+@app.delete("/notes/{note_id}")
 def delete_note(note_id:int, session: Session = Depends(get_session)):
         notee = session.get(Note,note_id)
         if not notee:

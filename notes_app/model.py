@@ -1,6 +1,6 @@
-from sqlmodel import Field, SQLModel, create_engine
+from sqlmodel import Field, SQLModel
 from typing import Optional
-import os
+
 
 class NoteBase(SQLModel):
     task: str 
@@ -18,7 +18,3 @@ class NoteRead(NoteBase):
 class NoteUpdate(SQLModel):
     task: Optional[str] = None
     is_completed: Optional[bool] = False
-
-databasekey = os.getenv('NEON_DB')
-engine = create_engine(databasekey)
-

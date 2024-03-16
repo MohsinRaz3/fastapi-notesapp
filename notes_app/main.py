@@ -1,10 +1,19 @@
-from sqlmodel import Session, SQLModel, select
-from .model import engine, Note, NoteCreate, NoteRead
+from sqlmodel import Session, SQLModel, select, create_engine
+from .model import Note, NoteCreate, NoteRead
 from fastapi import FastAPI, HTTPException, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from typing import List, Annotated
+from notes_app import settings
 
+
+connection_string = str(settings.DATABASE_URL).replace("postgresql", "postgresql+psycopg")
+engine = create_engine( connection_string, connect_args= {"sslmode" : "require"}, pool_recycle=300)
+
+# Function to create tables on startup
+async def create_tables():
+    SQLModel.metadata.create_all(engine)
+    
 @asynccontextmanager
 async def lifespan(app: FastAPI):
      await create_tables()
@@ -40,35 +49,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Function to create tables on startup
-async def create_tables():
-    SQLModel.metadata.create_all(engine)
+
 
 #Dependency function
 async def get_session():
     with Session(engine) as session:
            yield session
 
-# Event to create tables on startup
-# @app.on_event("startup")
-# async def startup_event():
-#     await create_tables()
-
-#Home route
 @app.get("/")
 async def home_notes():
     return {"message":"Nextjs FastAPI Notes-App"}
 
-#Get single hero
+#Get single note
 @app.get("/notes/{note_id}", response_model=NoteRead)
 async def get_single_note(note_id: int, session: Annotated[Session, Depends(get_session)]):
     note_data = session.get(Note, note_id)
-    # If note_data is None, it means the note with the given ID doesn't exist
     if not note_data:
         raise HTTPException(status_code=404, detail="Note not found")
     return note_data
 
-# FastAPI endpoint for getting heroes
+# FastAPI endpoint for getting all notes
 @app.get("/notes/",response_model=List[NoteRead])
 async def get_all_notes(session: Annotated[Session, Depends(get_session)])-> List[NoteRead]:
         notes = session.exec(select(Note)).all()
@@ -87,7 +87,7 @@ async def create_note(note: NoteCreate,session: Annotated[Session, Depends(get_s
 
 #FastAPI endpoint to Update Heros    
 @app.patch("/notes/{note_id}",response_model=NoteRead)
-async def update_note(note_id : int, note:Note, session: Session = Depends(get_session)):
+async def update_note(note_id : int, note:Note,session: Annotated[Session, Depends(get_session)]):
         
         note_item = session.get(Note, note_id)
         if not note_item:
@@ -104,7 +104,7 @@ async def update_note(note_id : int, note:Note, session: Session = Depends(get_s
 
 
 @app.delete("/notes/{note_id}")
-def delete_note(note_id:int, session: Session = Depends(get_session)):
+def delete_note(note_id:int,session: Annotated[Session, Depends(get_session)]):
         notee = session.get(Note,note_id)
         if not notee:
             raise HTTPException(status_code=404,detail="hero not found")

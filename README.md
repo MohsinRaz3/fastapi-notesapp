@@ -29,5 +29,5 @@ cd fastapi-notesapp
 
 poetry add fastapi "uvicorn[standard]"
 
-poetry run uvicorn fastapi_helloworld.main:app --host 0.0.0.0 --port 8000
+poetry run uvicorn fastapi-notesapp.main:app --host 0.0.0.0 --port 8000
 

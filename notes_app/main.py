@@ -75,7 +75,7 @@ async def get_all_notes(session: Annotated[Session, Depends(get_session)])-> Lis
             raise HTTPException(status_code=404,detail="notes not found")
         return notes
     
-# FastAPI endpoint for creating heroes
+# POST FastAPI endpoint for heroes
 @app.post("/notes/") 
 async def create_note(note: NoteCreate,session: Annotated[Session, Depends(get_session)]):
         db_note = Note.model_validate(note) 

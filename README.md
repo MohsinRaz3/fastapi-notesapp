@@ -1,6 +1,6 @@
 # Building Notes App with Python FastAPI, Sqlmodel, Poetry and neon postgresql
 
-![FastAPI, SQLModel, Postgres](https://github.com/MohsinRaz3/fastapi-notesapp/notesapp.png)
+![FastAPI, SQLModel, Postgres](https://github.com/MohsinRaz3/fastapi-notesapp/blob/main/notesapp.png)
 
 
 This project aims to create a Notes App using Python FastAPI, Sqlmodel, Poetry, and neon PostgreSQL. FastAPI is a modern Python web framework known for its high-performance capabilities, making it ideal for building web applications efficiently. Here's a brief overview of the project:

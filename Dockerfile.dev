@@ -1,0 +1,19 @@
+#stage 1: Build Dependencies 
+FROM ubuntu:22.04
+
+#stage 2: Production Image
+FROM python:3.12
+LABEL maintainer="mohsin"
+
+#set the working directory inside the container
+WORKDIR /code
+
+RUN pip install poetry
+
+COPY . /code/
+
+RUN poetry config virtualenvs.create false
+
+RUN poetry install
+
+CMD ["poetry","run","uvicorn","notes_app.main:app","--host","0.0.0.0","--reload"]
